@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace net.BASS
+namespace netBASS
 {
     public class BASS
     {
@@ -19,5 +19,26 @@ namespace net.BASS
 
         [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
         public static extern bool BASS_ChannelPlay(uint handle, [MarshalAs(UnmanagedType.Bool)]bool restart);
+
+        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
+        public static extern int BASS_ErrorGetCode();
+
+        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool BASS_MusicFree(uint handle);
+
+        [DllImport(@"bass.dll", EntryPoint = "BASS_MusicLoad", CharSet = CharSet.Auto)]
+        private static extern uint BASS_ML([MarshalAs(UnmanagedType.Bool)]bool mem, IntPtr file,
+            long offset, int lenght, uint flags, uint freq);
+
+
+        public static uint BASS_MusicLoad(byte[] file, long offset, int lenght, uint flags, uint freq)
+        {
+            IntPtr ptr = Marshal.AllocHGlobal(file.Length);
+            Marshal.Copy(file, 0, ptr, file.Length);
+
+            return BASS_ML(true, ptr , offset, file.Length, flags, freq);
+        }
+
     }
 }
