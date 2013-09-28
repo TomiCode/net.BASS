@@ -73,5 +73,12 @@ namespace netBASS
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool BASS_Start();
 
+        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
+        public static extern BASSActive BASS_ChannelIsActive(int handle);
+
+        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool BASS_ChannelLock(int handle, [MarshalAs(UnmanagedType.Bool)]bool channelLock);
+
     }
 }

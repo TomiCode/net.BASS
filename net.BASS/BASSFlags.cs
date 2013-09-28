@@ -83,4 +83,12 @@ namespace netBASS
         BASS_ASYNCFILE          = 0x40000000,
         BASS_UNICODE            = -2147483648
     };
+
+    public enum BASSActive
+    {
+        BASS_ACTIVE_STOPPED = 0,
+        BASS_ACTIVE_PLAYING = 1,
+        BASS_ACTIVE_STALLED = 2,
+        BASS_ACTIVE_PAUSED = 3
+    }
 }
