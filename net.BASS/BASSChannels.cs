@@ -3,23 +3,28 @@ using System.Runtime.InteropServices;
 
 namespace netBASS
 {
-
-    public struct BASS_3DVECTOR
+    [StructLayoutAttribute(LayoutKind.Sequential, Pack = 1)]
+    public class BASS_3DVECTOR
     {
         public float x;
         public float y;
         public float z;
-
+        public BASS_3DVECTOR(){}
         public BASS_3DVECTOR(float x, float y, float z)
         {
             this.x = x;
             this.y = y;
             this.z = z;
         }
-
+        public void SetValue(float x, float y, float z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
         public override string ToString()
         {
-            return String.Format("X: {0}, Y: {1}, Z: {2}", x, y, z); 
+            return String.Format("X: {0}, Y: {1}, Z: {2}", x, y, z);
         }
     }
 
@@ -34,39 +39,73 @@ namespace netBASS
         [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool BASS_ChannelGet3DAttributes(int handle, ref IntPtr mode, ref IntPtr min,
-                ref IntPtr max, ref IntPtr iangle, ref IntPtr oangle, ref IntPtr outvol);  // Fix ME!
+                ref IntPtr max, ref IntPtr iangle, ref IntPtr oangle, ref IntPtr outvol);
 
         [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool BASS_ChannelGet3DPosition(int handle, BASS_3DVECTOR pos, BASS_3DVECTOR orient, BASS_3DVECTOR vel); // NOT WORKING!
+        private static extern bool BASS_ChannelGet3DPosition(int handle, IntPtr pos, IntPtr orient, IntPtr vel);
 
-        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool BASS_ChannelSet3DPosition(int handle, IntPtr pos, IntPtr orient, IntPtr vel);
-
-        public static bool BASS_ChannelSet3DPosition(int handle, BASS_3DVECTOR? pos, BASS_3DVECTOR? orient, BASS_3DVECTOR? vel)
+        public static bool BASS_ChannelGet3DPosition(int handle, BASS_3DVECTOR pos, BASS_3DVECTOR orient, BASS_3DVECTOR vel)
         {
-            IntPtr[] pointers = new IntPtr[3];
-            object[] args = new object[3];
+            IntPtr[] ptr = new IntPtr[3];
+            BASS_3DVECTOR[] args = new BASS_3DVECTOR[4];
+            bool result;
 
             args[0] = pos;
             args[1] = orient;
             args[2] = vel;
 
-            for (int i = 0; i < pointers.Length; i++)
-			{
+            for (int i = 0; i < ptr.Length; i++)
+            {
                 if (args[i] != null)
                 {
-                    pointers[i] = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(BASS_3DVECTOR)));
-                    Marshal.StructureToPtr(args[i], pointers[i], false);
+                    ptr[i] = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(BASS_3DVECTOR)));
+                    Marshal.StructureToPtr(args[i], ptr[i], false);
                 }
-                else pointers[i] = IntPtr.Zero;
-			}
+                else ptr[i] = IntPtr.Zero;
+            }
 
-            bool result =  BASS_ChannelSet3DPosition(handle, pointers[0], pointers[1], pointers[2]);
-            foreach (var ptr in pointers)
+            result = BASS_ChannelGet3DPosition(handle, ptr[0], ptr[1], ptr[2]);
+            for (int i = 0; i < ptr.Length; i++)
             {
-                if (ptr != null) Marshal.FreeHGlobal(ptr);
+                if (ptr[i] != IntPtr.Zero)
+                {
+                    args[3] = (BASS_3DVECTOR)Marshal.PtrToStructure(ptr[i], typeof(BASS_3DVECTOR));
+                    args[i].SetValue(args[3].x, args[3].y, args[3].z);
+                    Marshal.FreeHGlobal(ptr[i]);
+                }
+            }
+            return result;
+        }
+
+        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool BASS_ChannelSet3DPosition(int handle, IntPtr pos, IntPtr orient, IntPtr vel);
+
+        public static bool BASS_ChannelSet3DPosition(int handle, BASS_3DVECTOR pos, BASS_3DVECTOR orient, BASS_3DVECTOR vel)
+        {
+            IntPtr[] ptr = new IntPtr[3];
+            object[] args = new object[3];
+            bool result;
+
+            args[0] = pos;
+            args[1] = orient;
+            args[2] = vel;
+
+            for (int i = 0; i < ptr.Length; i++)
+            {
+                if (args[i] != null)
+                {
+                    ptr[i] = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(BASS_3DVECTOR)));
+                    Marshal.StructureToPtr(args[i], ptr[i], false);
+                }
+                else  ptr[i] = IntPtr.Zero;
+            }
+
+            result = BASS_ChannelSet3DPosition(handle, ptr[0], ptr[1], ptr[2]);
+            foreach (var p in ptr)
+            {
+                if (p != IntPtr.Zero) Marshal.FreeHGlobal(p);
             }
             return result;
         }
