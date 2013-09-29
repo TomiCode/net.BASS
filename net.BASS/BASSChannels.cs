@@ -38,7 +38,7 @@ namespace netBASS
 
         [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool BASS_ChannelGet3DPosition(int handle, BASS_3DVECTOR pos, BASS_3DVECTOR orient, BASS_3DVECTOR vel);
+        private static extern bool BASS_ChannelGet3DPosition(int handle, BASS_3DVECTOR pos, BASS_3DVECTOR orient, BASS_3DVECTOR vel); // NOT WORKING!
 
         [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -47,36 +47,26 @@ namespace netBASS
         public static bool BASS_ChannelSet3DPosition(int handle, BASS_3DVECTOR? pos, BASS_3DVECTOR? orient, BASS_3DVECTOR? vel)
         {
             IntPtr[] pointers = new IntPtr[3];
-            int size;
+            object[] args = new object[3];
+
+            args[0] = pos;
+            args[1] = orient;
+            args[2] = vel;
 
             for (int i = 0; i < pointers.Length; i++)
 			{
-			    if(i == 0 && pos != null){
-                    size = Marshal.SizeOf(typeof(BASS_3DVECTOR));
-                    pointers[i] = Marshal.AllocHGlobal(size);
-                    Marshal.StructureToPtr(pos, pointers[i], false);
+                if (args[i] != null)
+                {
+                    pointers[i] = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(BASS_3DVECTOR)));
+                    Marshal.StructureToPtr(args[i], pointers[i], false);
                 }
-                else if(i == 1 && orient != null){
-                    size = Marshal.SizeOf(typeof(BASS_3DVECTOR));
-                    pointers[i] = Marshal.AllocHGlobal(size);
-                    Marshal.StructureToPtr(orient, pointers[i], false);
-                }
-                else if(i == 2 && vel != null){
-                    size = Marshal.SizeOf(typeof(BASS_3DVECTOR));
-                    pointers[i] = Marshal.AllocHGlobal(size);
-                    Marshal.StructureToPtr(vel, pointers[i], false);
-                }
-                else{
-                    pointers[i] = IntPtr.Zero;
-                }
+                else pointers[i] = IntPtr.Zero;
 			}
 
             bool result =  BASS_ChannelSet3DPosition(handle, pointers[0], pointers[1], pointers[2]);
-
-            for (int i = 0; i < pointers.Length; i++)
+            foreach (var ptr in pointers)
             {
-                if(pointers[i] != IntPtr.Zero)
-                    Marshal.FreeHGlobal(pointers[i]);
+                if (ptr != null) Marshal.FreeHGlobal(ptr);
             }
             return result;
         }
