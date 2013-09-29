@@ -71,5 +71,8 @@ namespace netBASS
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool BASS_Start();
 
+        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
+        public static extern void BASS_Apply3D();
+
     }
 }
