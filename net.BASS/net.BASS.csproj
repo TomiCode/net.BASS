@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BASS.cs" />
+    <Compile Include="BASSChannels.cs" />
     <Compile Include="BASSError.cs" />
     <Compile Include="BASSFlags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

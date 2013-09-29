@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace netBASS
 {
-    public class BASS
+    public partial class BASS
     {
         [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -23,9 +23,6 @@ namespace netBASS
         }
 
         [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
-        public static extern bool BASS_ChannelPlay(int handle, [MarshalAs(UnmanagedType.Bool)]bool restart);
-
-        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
         public static extern BASSError BASS_ErrorGetCode();
 
         [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
@@ -37,6 +34,7 @@ namespace netBASS
 
         public static int BASS_MusicLoad(string file, long offset, int lenght, BASSFlag flags, int freq)
         {
+
             IntPtr ptr = Marshal.StringToHGlobalAnsi(file);
             int handle = BASS_ML(false, ptr, offset, lenght, flags, freq);
             Marshal.FreeHGlobal(ptr);
@@ -72,13 +70,6 @@ namespace netBASS
         [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool BASS_Start();
-
-        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
-        public static extern BASSActive BASS_ChannelIsActive(int handle);
-
-        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool BASS_ChannelLock(int handle, [MarshalAs(UnmanagedType.Bool)]bool channelLock);
 
     }
 }

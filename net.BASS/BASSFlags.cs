@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace netBASS
 {
@@ -90,5 +87,14 @@ namespace netBASS
         BASS_ACTIVE_PLAYING = 1,
         BASS_ACTIVE_STALLED = 2,
         BASS_ACTIVE_PAUSED = 3
+    }
+
+    public enum BASSPos
+    {
+        BASS_POS_BYTE = 0,
+        BASS_POS_MUSIC_ORDER = 1,
+        BASS_POS_OGG = 3,
+        BASS_POS_DECODE = 0x10000000,
+        BASS_POS_DECODETO = 0x20000000
     }
 }
