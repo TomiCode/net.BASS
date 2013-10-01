@@ -120,5 +120,20 @@ namespace netBASS
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool BASS_ChannelLock(int handle, [MarshalAs(UnmanagedType.Bool)]bool channelLock);
 
+        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
+        public static extern int BASS_ChannelGetData(int handle, float[] buffer, BASSLenght lenght);
+
+        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
+        public static extern int BASS_ChannelGetDevice(int handle);
+
+        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
+        public static extern long BASS_ChannelGetLength(int handle, BASSPos mode);
+
+        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
+        public static extern int BASS_ChannelGetLevel(int handle);
+
+        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
+        public static extern long BASS_ChannelGetPosition(int handle, BASSPos mode);
+
     }
 }

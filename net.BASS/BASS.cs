@@ -5,6 +5,10 @@ namespace netBASS
 {
     public partial class BASS
     {
+        public static int LOWORD(int l){
+            return ((l) & 0xffff);
+        }
+
         [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool BASS_Init(int device, int freq, BASSInit flags, IntPtr win, IntPtr clsid);

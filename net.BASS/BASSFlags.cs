@@ -97,4 +97,21 @@ namespace netBASS
         BASS_POS_DECODE = 0x10000000,
         BASS_POS_DECODETO = 0x20000000
     }
+
+    public enum BASSLenght
+    {
+        BASS_DATA_AVAILABLE = 0,	// query how much data is buffered
+        BASS_DATA_FLOAT = 0x40000000,	// flag: return floating-point sample data
+        BASS_DATA_FFT256 = -2147483648,	// 256 sample FFT
+        BASS_DATA_FFT512 = -2147483647,	// 512 FFT
+        BASS_DATA_FFT1024 = -2147483646,	// 1024 FFT
+        BASS_DATA_FFT2048 = -2147483645,	// 2048 FFT
+        BASS_DATA_FFT4096 = -2147483644,	// 4096 FFT
+        BASS_DATA_FFT8192 = -2147483643,	// 8192 FFT
+        BASS_DATA_FFT16384 = -2147483642,	// 16384 FFT
+        BASS_DATA_FFT_INDIVIDUAL = 0x10,	// FFT flag: FFT for each channel, else all combined
+        BASS_DATA_FFT_NOWINDOW = 0x20,	// FFT flag: no Hanning window
+        BASS_DATA_FFT_REMOVEDC = 0x40,	// FFT flag: pre-remove DC bias
+        BASS_DATA_FFT_COMPLEX = 0x80	// FFT flag: return complex data
+    }
 }
