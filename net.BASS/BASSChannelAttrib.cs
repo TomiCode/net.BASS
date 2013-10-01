@@ -26,6 +26,21 @@ namespace netBASS
     {
         [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool BASS_ChannelGetAttribute(int handle, BASSChannelAttrib attrib, out float value);
+        private static extern bool BASS_ChannelGetAttribute(int handle, BASSChannelAttrib attrib, IntPtr value);
+
+        public static bool BASS_ChannelGetAttribute(int handle, BASSChannelAttrib attrib, out float value)
+        {
+
+            IntPtr val = Marshal.AllocHGlobal(sizeof(float));
+            bool result;
+            float[] _val = new float[1];
+
+            result =  BASS_ChannelGetAttribute(handle, attrib, val);
+            Marshal.Copy(val, _val, 0, 1);
+            value = _val[0];
+
+            Marshal.FreeHGlobal(val);
+            return result;
+        }
     }
 }
