@@ -135,5 +135,9 @@ namespace netBASS
         [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
         public static extern long BASS_ChannelGetPosition(int handle, BASSPos mode);
 
+        [DllImport(@"bass.dll", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool BASS_ChannelStop(int handle);
+
     }
 }
